@@ -1,48 +1,97 @@
 const features = [
-  { icon: "🌾", title: "Bahan Premium",    desc: "Tepung kanji pilihan berkualitas tinggi dipadukan dengan bumbu rempah asli pilihan langsung dari petani lokal." },
-  { icon: "👨‍🍳", title: "Resep Rahasia",   desc: "Resep turun-temurun yang sudah terbukti menghasilkan cimol kenyal dan gurih yang tidak ada duanya." },
-  { icon: "⚡", title: "Proses Higienis",  desc: "Setiap produk dibuat dengan standar kebersihan tinggi, fresh setiap hari, tanpa pengawet berbahaya." },
-  { icon: "❄️", title: "Frozen Tahan Lama", desc: "Tersedia varian frozen yang bisa disimpan hingga 3 bulan di freezer. Praktis, lezat kapanpun!" },
-  { icon: "🚚", title: "Pengiriman Cepat", desc: "Melayani pengiriman ke seluruh wilayah Sumedang dan sekitarnya dengan harga ongkos yang bersahabat." },
-  { icon: "💬", title: "Pelayanan Ramah",  desc: "Tim kami siap melayani pesanan dan pertanyaan Anda dengan cepat, ramah, dan profesional setiap hari." },
+  { icon: "🌾", title: "Bahan Premium",     desc: "Tepung kanji pilihan berkualitas tinggi dari petani lokal, tanpa bahan tambahan berbahaya." },
+  { icon: "👨‍🍳", title: "Resep Rahasia",    desc: "Resep turun-temurun yang sudah terbukti menghasilkan cimol kenyal dan gurih yang tak tertandingi." },
+  { icon: "⚡", title: "Proses Higienis",   desc: "Standar kebersihan tinggi. Fresh setiap hari, tanpa pengawet. Aman untuk semua usia." },
+  { icon: "❄️", title: "Frozen Tahan Lama", desc: "Varian frozen bisa disimpan hingga 3 bulan. Goreng kapanpun, rasanya tetap sama!" },
+  { icon: "🚚", title: "Delivery Available", desc: "Melayani pengiriman ke seluruh Sumedang dan sekitarnya. Pesan dari rumah, langsung sampai!" },
+  { icon: "💬", title: "Respon Cepat",      desc: "Tim kami siap melayani via WhatsApp. Pertanyaan dijawab dalam hitungan menit." },
 ];
 
 export default function WhyUsSection() {
   return (
-    <section className="py-20 bg-muted/40">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-14">
-          <p className="text-red-500 font-semibold tracking-widest uppercase text-sm mb-2">
-            💎 Keunggulan Kami
-          </p>
-          <h2 className="font-display font-black text-4xl md:text-5xl leading-tight">
-            Kenapa Pilih{" "}
-             <span
-            className="text-transparent bg-clip-text"
-            style={{
-              backgroundImage: "linear-gradient(135deg, #F97316, #EAB308)",
-            }}
+    <section
+      className="py-24 relative overflow-hidden"
+      style={{ backgroundColor: "#9c3232" }}
+    >
+      {/* Background texture */}
+      <div
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(circle, #e4bd6a 1px, transparent 1px)`,
+          backgroundSize: "32px 32px",
+        }}
+      />
+
+      {/* Corner decorations */}
+      <div
+        className="absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] opacity-20 pointer-events-none"
+        style={{ backgroundColor: "#e4bd6a" }}
+      />
+      <div
+        className="absolute bottom-0 left-0 w-80 h-80 rounded-full blur-[100px] opacity-15 pointer-events-none"
+        style={{ backgroundColor: "#e4bd6a" }}
+      />
+
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider mb-4 glass"
+            style={{ color: "#e4bd6a" }}
           >
-            Cimol Bojot AA?
-          </span>
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ backgroundColor: "#e4bd6a" }}
+            />
+            Keunggulan Kami
+          </div>
+          <h2
+            className="font-display font-bold text-4xl md:text-5xl lg:text-6xl leading-tight text-white mb-4"
+          >
+            Kenapa Harus{" "}
+            <span style={{ color: "#e4bd6a" }}>Cimol Bojot AA?</span>
           </h2>
-          <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
-            Bukan sekadar cimol biasa. Kami menghadirkan pengalaman jajanan
-            terbaik yang selalu membuatmu ingin kembali.
+          <p
+            className="max-w-xl mx-auto text-base leading-relaxed"
+            style={{ color: "rgba(255,255,255,0.6)" }}
+          >
+            Bukan sekadar jajanan. Kami menghadirkan pengalaman kuliner yang
+            membuatmu selalu kembali lagi.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((f) => (
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {features.map((f, i) => (
             <div
               key={f.title}
-              className="bg-card border border-border rounded-3xl p-6 hover:shadow-lg hover:border-primary/30 transition-all duration-300 group"
+              className="group p-6 rounded-3xl border transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl cursor-default"
+              style={{
+                backgroundColor: i === 0 || i === 5
+                  ? "rgba(228,189,106,0.12)"
+                  : "rgba(255,255,255,0.05)",
+                borderColor: i === 0 || i === 5
+                  ? "rgba(228,189,106,0.3)"
+                  : "rgba(255,255,255,0.08)",
+              }}
             >
-              <div className="w-14 h-14 bg-muted rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
+              <div
+                className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-4 transition-transform group-hover:scale-110"
+                style={{
+                  backgroundColor: "rgba(228,189,106,0.15)",
+                }}
+              >
                 {f.icon}
               </div>
-              <h3 className="font-display font-bold text-xl mb-2">{f.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <h3
+                className="font-display font-bold text-xl mb-2 text-white"
+              >
+                {f.title}
+              </h3>
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: "rgba(255,255,255,0.55)" }}
+              >
                 {f.desc}
               </p>
             </div>

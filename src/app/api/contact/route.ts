@@ -12,19 +12,12 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const data = schema.parse(body);
-
     const contact = await prisma.contactMessage.create({ data });
     return NextResponse.json(contact, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Data tidak valid" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Data tidak valid" }, { status: 400 });
     }
-    return NextResponse.json(
-      { error: "Gagal menyimpan pesan" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Gagal menyimpan pesan" }, { status: 500 });
   }
 }

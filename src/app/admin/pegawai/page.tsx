@@ -1,87 +1,227 @@
-import { UserPlus, Search, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+"use client";
+
+import { useState } from "react";
+import { UserPlus, Search, MoreHorizontal, Users } from "lucide-react";
 
 const dummyPegawai = [
-  { name: "Budi Santoso",   email: "budi@cimolbojot.com",  role: "Pegawai", status: "Aktif",    joined: "Jan 2024" },
-  { name: "Siti Rahayu",    email: "siti@cimolbojot.com",  role: "Admin",   status: "Aktif",    joined: "Mar 2023" },
-  { name: "Ahmad Fauzi",    email: "ahmad@cimolbojot.com", role: "Pegawai", status: "Aktif",    joined: "Jun 2024" },
-  { name: "Dewi Anggraini", email: "dewi@cimolbojot.com",  role: "Pegawai", status: "Nonaktif", joined: "Feb 2024" },
-  { name: "Roni Kurniawan", email: "roni@cimolbojot.com",  role: "Pegawai", status: "Aktif",    joined: "Aug 2024" },
+  { name: "Budi Santoso",   email: "budi@cimolbojot.com",  role: "Pegawai", status: "Aktif",    joined: "Jan 2024", absensi: "98%" },
+  { name: "Siti Rahayu",    email: "siti@cimolbojot.com",  role: "Admin",   status: "Aktif",    joined: "Mar 2023", absensi: "100%" },
+  { name: "Ahmad Fauzi",    email: "ahmad@cimolbojot.com", role: "Pegawai", status: "Aktif",    joined: "Jun 2024", absensi: "85%" },
+  { name: "Dewi Anggraini", email: "dewi@cimolbojot.com",  role: "Pegawai", status: "Nonaktif", joined: "Feb 2024", absensi: "60%" },
+  { name: "Roni Kurniawan", email: "roni@cimolbojot.com",  role: "Pegawai", status: "Aktif",    joined: "Aug 2024", absensi: "95%" },
 ];
 
-const roleStyle: Record<string, string> = {
-  Owner:   "bg-red-500/10 text-red-400 border-red-500/20",
-  Admin:   "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  Pegawai: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+const roleConfig: Record<string, { bg: string; color: string }> = {
+  Owner:   { bg: "rgba(156,50,50,0.2)",  color: "#e4bd6a" },
+  Admin:   { bg: "rgba(147,51,234,0.15)", color: "#c084fc" },
+  Pegawai: { bg: "rgba(37,99,235,0.15)", color: "#60a5fa" },
 };
 
 export default function PegawaiPage() {
+  const [search, setSearch] = useState("");
+
+  const filtered = dummyPegawai.filter(
+    (p) =>
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.email.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className="p-6 md:p-8 max-w-5xl">
+    <div
+      className="min-h-screen p-6 md:p-8"
+      style={{ backgroundColor: "#1a0808" }}
+    >
+      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white">Pegawai</h1>
-          <p className="text-zinc-400 text-sm mt-1">
+          <h1
+            className="font-display font-bold text-3xl md:text-4xl mb-1"
+            style={{ color: "#e4bd6a" }}
+          >
+            Pegawai
+          </h1>
+          <p
+            className="text-sm flex items-center gap-1.5"
+            style={{ color: "rgba(255,255,255,0.35)" }}
+          >
+            <Users className="w-3.5 h-3.5" />
             {dummyPegawai.length} pegawai terdaftar
           </p>
         </div>
-        <Button className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white border-0 gap-2">
+
+        <button
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all hover:opacity-90 shadow-lg"
+          style={{
+            backgroundColor: "#9c3232",
+            color: "#e4bd6a",
+            boxShadow: "0 4px 16px rgba(156,50,50,0.3)",
+          }}
+        >
           <UserPlus className="w-4 h-4" />
           Tambah Pegawai
-        </Button>
+        </button>
       </div>
 
-      <div className="relative mb-5 max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-        <Input
+      {/* Search */}
+      <div className="relative mb-6 max-w-sm">
+        <Search
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4"
+          style={{ color: "rgba(228,189,106,0.4)" }}
+        />
+        <input
+          type="text"
           placeholder="Cari pegawai..."
-          className="pl-9 bg-zinc-900 border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-red-500"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full pl-11 pr-4 py-3 rounded-2xl text-sm outline-none transition-all"
+          style={{
+            backgroundColor: "rgba(255,255,255,0.05)",
+            border: "1px solid rgba(228,189,106,0.15)",
+            color: "#ffffff",
+          }}
         />
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* Table */}
+      <div
+        className="rounded-3xl border overflow-hidden"
+        style={{ borderColor: "rgba(228,189,106,0.1)" }}
+      >
+        <div
+          className="px-6 py-4 border-b"
+          style={{
+            background: "linear-gradient(135deg, rgba(156,50,50,0.3), rgba(156,50,50,0.15))",
+            borderColor: "rgba(228,189,106,0.1)",
+          }}
+        >
+          <h2
+            className="font-display font-bold text-lg"
+            style={{ color: "#e4bd6a" }}
+          >
+            Daftar Pegawai
+          </h2>
+        </div>
+
+        <div className="overflow-x-auto" style={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-zinc-800">
-                {["Nama", "Role", "Status", "Bergabung", ""].map((h, i) => (
-                  <th key={i} className="text-left px-6 py-3 text-zinc-500 text-xs font-medium uppercase tracking-wider">
+              <tr style={{ borderBottom: "1px solid rgba(228,189,106,0.08)" }}>
+                {["Nama", "Role", "Kehadiran", "Status", "Bergabung", ""].map((h) => (
+                  <th
+                    key={h}
+                    className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider"
+                    style={{ color: "rgba(255,255,255,0.3)" }}
+                  >
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800">
-              {dummyPegawai.map((p) => (
-                <tr key={p.email} className="hover:bg-zinc-800/50 transition-colors">
+            <tbody>
+              {filtered.map((p, i) => (
+                <tr
+                  key={p.email}
+                  style={{
+                    borderBottom: i < filtered.length - 1
+                      ? "1px solid rgba(228,189,106,0.06)"
+                      : "none",
+                  }}
+                >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                      <div
+                        className="w-9 h-9 rounded-full flex items-center justify-center font-display font-bold text-sm shrink-0"
+                        style={{ backgroundColor: "#9c3232", color: "#e4bd6a" }}
+                      >
                         {p.name.charAt(0)}
                       </div>
                       <div>
-                        <p className="text-white text-sm font-medium">{p.name}</p>
-                        <p className="text-zinc-500 text-xs">{p.email}</p>
+                        <p
+                          className="font-medium text-sm"
+                          style={{ color: "rgba(255,255,255,0.85)" }}
+                        >
+                          {p.name}
+                        </p>
+                        <p
+                          className="text-xs"
+                          style={{ color: "rgba(255,255,255,0.3)" }}
+                        >
+                          {p.email}
+                        </p>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${roleStyle[p.role]}`}>
+                    <span
+                      className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                      style={{
+                        backgroundColor: roleConfig[p.role]?.bg ?? "rgba(255,255,255,0.1)",
+                        color:           roleConfig[p.role]?.color ?? "#ffffff",
+                      }}
+                    >
                       {p.role}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <div className={`w-1.5 h-1.5 rounded-full ${p.status === "Aktif" ? "bg-green-400" : "bg-zinc-500"}`} />
-                      <span className={`text-sm ${p.status === "Aktif" ? "text-zinc-300" : "text-zinc-500"}`}>
+                      <div
+                        className="flex-1 max-w-[80px] h-1.5 rounded-full overflow-hidden"
+                        style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+                      >
+                        <div
+                          className="h-full rounded-full"
+                          style={{
+                            width: p.absensi,
+                            backgroundColor:
+                              parseInt(p.absensi) >= 90
+                                ? "#16a34a"
+                                : parseInt(p.absensi) >= 75
+                                ? "#d97706"
+                                : "#dc2626",
+                          }}
+                        />
+                      </div>
+                      <span
+                        className="text-xs font-mono"
+                        style={{ color: "rgba(255,255,255,0.55)" }}
+                      >
+                        {p.absensi}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{
+                          backgroundColor:
+                            p.status === "Aktif" ? "#16a34a" : "rgba(255,255,255,0.25)",
+                        }}
+                      />
+                      <span
+                        className="text-sm"
+                        style={{
+                          color:
+                            p.status === "Aktif"
+                              ? "rgba(255,255,255,0.7)"
+                              : "rgba(255,255,255,0.3)",
+                        }}
+                      >
                         {p.status}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-zinc-400 text-sm">{p.joined}</td>
+                  <td
+                    className="px-6 py-4 text-sm"
+                    style={{ color: "rgba(255,255,255,0.35)" }}
+                  >
+                    {p.joined}
+                  </td>
                   <td className="px-6 py-4">
-                    <button className="text-zinc-500 hover:text-white transition-colors">
+                    <button
+                      className="p-1.5 rounded-lg transition-all hover:opacity-70"
+                      style={{ color: "rgba(255,255,255,0.3)" }}
+                    >
                       <MoreHorizontal className="w-4 h-4" />
                     </button>
                   </td>

@@ -1,147 +1,302 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Camera, Clock, CheckCircle2, Filter } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MapPin, Camera, Clock, CheckCircle2, Filter, CalendarDays } from "lucide-react";
 
-const statusStyle: Record<string, string> = {
-  HADIR:     "bg-green-500/10 text-green-400 border-green-500/20",
-  TERLAMBAT: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-  ALPHA:     "bg-red-500/10 text-red-400 border-red-500/20",
-  IZIN:      "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  SAKIT:     "bg-purple-500/10 text-purple-400 border-purple-500/20",
+const statusConfig: Record<string, { bg: string; color: string; label: string }> = {
+  HADIR:     { bg: "rgba(22,163,74,0.12)",  color: "#16a34a", label: "Hadir" },
+  TERLAMBAT: { bg: "rgba(217,119,6,0.12)",  color: "#d97706", label: "Terlambat" },
+  ALPHA:     { bg: "rgba(220,38,38,0.12)",  color: "#dc2626", label: "Alpha" },
+  IZIN:      { bg: "rgba(37,99,235,0.12)",  color: "#2563eb", label: "Izin" },
+  SAKIT:     { bg: "rgba(147,51,234,0.12)", color: "#9333ea", label: "Sakit" },
 };
 
 const dummyRekap = [
-  { tanggal: "17 Mar 2025", masuk: "08:02", keluar: "17:05", lokasi: "Sumedang", status: "HADIR" },
-  { tanggal: "16 Mar 2025", masuk: "07:55", keluar: "17:00", lokasi: "Sumedang", status: "HADIR" },
-  { tanggal: "15 Mar 2025", masuk: "09:15", keluar: "17:00", lokasi: "Sumedang", status: "TERLAMBAT" },
-  { tanggal: "14 Mar 2025", masuk: "-",     keluar: "-",     lokasi: "-",        status: "ALPHA" },
-  { tanggal: "13 Mar 2025", masuk: "08:00", keluar: "17:00", lokasi: "Sumedang", status: "HADIR" },
+  { tanggal: "18 Mar 2025", masuk: "08:02", keluar: "17:05", lokasi: "Sumedang", status: "HADIR" },
+  { tanggal: "17 Mar 2025", masuk: "07:55", keluar: "17:00", lokasi: "Sumedang", status: "HADIR" },
+  { tanggal: "16 Mar 2025", masuk: "09:15", keluar: "17:00", lokasi: "Sumedang", status: "TERLAMBAT" },
+  { tanggal: "15 Mar 2025", masuk: "-",     keluar: "-",     lokasi: "-",        status: "ALPHA" },
+  { tanggal: "14 Mar 2025", masuk: "08:00", keluar: "17:00", lokasi: "Sumedang", status: "HADIR" },
+  { tanggal: "13 Mar 2025", masuk: "08:10", keluar: "17:00", lokasi: "Sumedang", status: "HADIR" },
 ];
 
 export default function AbsensiPage() {
   const [sudahMasuk,  setSudahMasuk]  = useState(false);
   const [sudahKeluar, setSudahKeluar] = useState(false);
+
   const now = new Date().toLocaleTimeString("id-ID", {
     hour: "2-digit", minute: "2-digit",
   });
 
+  const today = new Date().toLocaleDateString("id-ID", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric",
+  });
+
   return (
-    <div className="p-6 md:p-8 max-w-4xl">
+    <div
+      className="min-h-screen p-6 md:p-8"
+      style={{ backgroundColor: "#1a0808" }}
+    >
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Absensi</h1>
-        <p className="text-zinc-400 text-sm mt-1">
-          {new Date().toLocaleDateString("id-ID", {
-            weekday: "long", day: "numeric", month: "long", year: "numeric",
-          })}
+        <h1
+          className="font-display font-bold text-3xl md:text-4xl mb-1"
+          style={{ color: "#e4bd6a" }}
+        >
+          Absensi
+        </h1>
+        <p
+          className="text-sm flex items-center gap-1.5"
+          style={{ color: "rgba(255,255,255,0.35)" }}
+        >
+          <CalendarDays className="w-3.5 h-3.5" />
+          {today}
         </p>
       </div>
 
-      {/* Clock in/out */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-6">
-        <h2 className="text-white font-semibold mb-5">Absensi Hari Ini</h2>
+      {/* Clock in/out card */}
+      <div
+        className="rounded-3xl border p-6 mb-6"
+        style={{
+          background: "linear-gradient(135deg, rgba(156,50,50,0.2), rgba(156,50,50,0.08))",
+          borderColor: "rgba(228,189,106,0.15)",
+        }}
+      >
+        <h2
+          className="font-display font-bold text-xl mb-5"
+          style={{ color: "#e4bd6a" }}
+        >
+          Absensi Hari Ini
+        </h2>
 
+        {/* Clock panels */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <div className={`rounded-xl p-4 border ${sudahMasuk ? "bg-green-500/5 border-green-500/20" : "bg-zinc-800/50 border-zinc-700"}`}>
+          {/* Clock In */}
+          <div
+            className="rounded-2xl p-5 border transition-all"
+            style={{
+              backgroundColor: sudahMasuk
+                ? "rgba(22,163,74,0.1)"
+                : "rgba(255,255,255,0.04)",
+              borderColor: sudahMasuk
+                ? "rgba(22,163,74,0.3)"
+                : "rgba(255,255,255,0.08)",
+            }}
+          >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-zinc-400 text-sm">Clock In</span>
-              {sudahMasuk && <CheckCircle2 className="w-4 h-4 text-green-400" />}
+              <span
+                className="text-sm font-medium"
+                style={{ color: "rgba(255,255,255,0.5)" }}
+              >
+                Clock In
+              </span>
+              {sudahMasuk && (
+                <CheckCircle2 className="w-4 h-4" style={{ color: "#16a34a" }} />
+              )}
             </div>
-            <p className="text-white font-bold text-2xl font-mono">
+            <p
+              className="font-display font-bold text-3xl font-mono mb-1"
+              style={{ color: sudahMasuk ? "#16a34a" : "rgba(255,255,255,0.2)" }}
+            >
               {sudahMasuk ? now : "--:--"}
             </p>
-            <p className="text-zinc-500 text-xs mt-1">
-              {sudahMasuk ? "Sudah absen masuk" : "Belum absen masuk"}
+            <p
+              className="text-xs"
+              style={{ color: "rgba(255,255,255,0.3)" }}
+            >
+              {sudahMasuk ? "Sudah absen masuk ✓" : "Belum absen masuk"}
             </p>
           </div>
 
-          <div className={`rounded-xl p-4 border ${sudahKeluar ? "bg-green-500/5 border-green-500/20" : "bg-zinc-800/50 border-zinc-700"}`}>
+          {/* Clock Out */}
+          <div
+            className="rounded-2xl p-5 border transition-all"
+            style={{
+              backgroundColor: sudahKeluar
+                ? "rgba(22,163,74,0.1)"
+                : "rgba(255,255,255,0.04)",
+              borderColor: sudahKeluar
+                ? "rgba(22,163,74,0.3)"
+                : "rgba(255,255,255,0.08)",
+            }}
+          >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-zinc-400 text-sm">Clock Out</span>
-              {sudahKeluar && <CheckCircle2 className="w-4 h-4 text-green-400" />}
+              <span
+                className="text-sm font-medium"
+                style={{ color: "rgba(255,255,255,0.5)" }}
+              >
+                Clock Out
+              </span>
+              {sudahKeluar && (
+                <CheckCircle2 className="w-4 h-4" style={{ color: "#16a34a" }} />
+              )}
             </div>
-            <p className="text-white font-bold text-2xl font-mono">
+            <p
+              className="font-display font-bold text-3xl font-mono mb-1"
+              style={{ color: sudahKeluar ? "#16a34a" : "rgba(255,255,255,0.2)" }}
+            >
               {sudahKeluar ? now : "--:--"}
             </p>
-            <p className="text-zinc-500 text-xs mt-1">
-              {sudahKeluar ? "Sudah absen keluar" : "Belum absen keluar"}
+            <p
+              className="text-xs"
+              style={{ color: "rgba(255,255,255,0.3)" }}
+            >
+              {sudahKeluar ? "Sudah absen keluar ✓" : "Belum absen keluar"}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-5">
+        {/* Info pills */}
+        <div className="flex flex-wrap gap-2 mb-5">
           {[
-            { icon: MapPin,  color: "text-blue-400",   label: "GPS otomatis terdeteksi" },
-            { icon: Camera,  color: "text-purple-400", label: "Foto selfie diperlukan" },
-            { icon: Clock,   color: "text-orange-400", label: "Batas masuk: 08:00 WIB" },
+            { icon: MapPin,  color: "#3b82f6", label: "GPS otomatis terdeteksi" },
+            { icon: Camera,  color: "#a855f7", label: "Foto selfie diperlukan" },
+            { icon: Clock,   color: "#f59e0b", label: "Batas masuk: 08:00 WIB" },
           ].map(({ icon: Icon, color, label }) => (
-            <div key={label} className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-400">
-              <Icon className={`w-3.5 h-3.5 ${color}`} />
+            <div
+              key={label}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.05)",
+                color: "rgba(255,255,255,0.45)",
+              }}
+            >
+              <Icon className="w-3.5 h-3.5" style={{ color }} />
               {label}
             </div>
           ))}
         </div>
 
+        {/* Action buttons */}
         <div className="flex gap-3">
           {!sudahMasuk ? (
-            <Button
-              className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white border-0 gap-2"
+            <button
               onClick={() => setSudahMasuk(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-semibold text-sm transition-all hover:opacity-90 shadow-lg"
+              style={{ backgroundColor: "#16a34a", color: "#ffffff" }}
             >
               <CheckCircle2 className="w-4 h-4" />
               Clock In Sekarang
-            </Button>
+            </button>
           ) : !sudahKeluar ? (
-            <Button
-              className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white border-0 gap-2"
+            <button
               onClick={() => setSudahKeluar(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-semibold text-sm transition-all hover:opacity-90 shadow-lg"
+              style={{ backgroundColor: "#9c3232", color: "#e4bd6a" }}
             >
               <CheckCircle2 className="w-4 h-4" />
               Clock Out Sekarang
-            </Button>
+            </button>
           ) : (
-            <div className="flex items-center gap-2 text-green-400 text-sm font-medium">
+            <div
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-semibold"
+              style={{
+                backgroundColor: "rgba(22,163,74,0.12)",
+                color: "#16a34a",
+              }}
+            >
               <CheckCircle2 className="w-5 h-5" />
-              Absensi hari ini selesai
+              Absensi hari ini selesai!
             </div>
           )}
         </div>
       </div>
 
       {/* Riwayat */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-zinc-800 flex items-center justify-between">
-          <h2 className="text-white font-semibold">Riwayat Absensi</h2>
-          <button className="flex items-center gap-1.5 text-zinc-400 hover:text-white text-sm transition-colors">
+      <div
+        className="rounded-3xl border overflow-hidden"
+        style={{ borderColor: "rgba(228,189,106,0.1)" }}
+      >
+        <div
+          className="px-6 py-4 flex items-center justify-between border-b"
+          style={{
+            background: "linear-gradient(135deg, rgba(156,50,50,0.3), rgba(156,50,50,0.15))",
+            borderColor: "rgba(228,189,106,0.1)",
+          }}
+        >
+          <h2
+            className="font-display font-bold text-lg"
+            style={{ color: "#e4bd6a" }}
+          >
+            Riwayat Absensi
+          </h2>
+          <button
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-all hover:opacity-70"
+            style={{
+              backgroundColor: "rgba(228,189,106,0.1)",
+              color: "#e4bd6a",
+            }}
+          >
             <Filter className="w-3.5 h-3.5" />
             Filter
           </button>
         </div>
-        <div className="overflow-x-auto">
+
+        <div className="overflow-x-auto" style={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-zinc-800">
+              <tr style={{ borderBottom: "1px solid rgba(228,189,106,0.08)" }}>
                 {["Tanggal", "Masuk", "Keluar", "Lokasi", "Status"].map((h) => (
-                  <th key={h} className="text-left px-6 py-3 text-zinc-500 text-xs font-medium uppercase tracking-wider">
+                  <th
+                    key={h}
+                    className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider"
+                    style={{ color: "rgba(255,255,255,0.3)" }}
+                  >
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800">
-              {dummyRekap.map((row) => (
-                <tr key={row.tanggal} className="hover:bg-zinc-800/50 transition-colors">
-                  <td className="px-6 py-4 text-zinc-300 text-sm">{row.tanggal}</td>
-                  <td className="px-6 py-4 text-zinc-300 text-sm font-mono">{row.masuk}</td>
-                  <td className="px-6 py-4 text-zinc-300 text-sm font-mono">{row.keluar}</td>
-                  <td className="px-6 py-4 text-zinc-400 text-sm">
-                    {row.lokasi !== "-" && <MapPin className="w-3.5 h-3.5 inline mr-1" />}
-                    {row.lokasi}
+            <tbody>
+              {dummyRekap.map((row, i) => (
+                <tr
+                  key={row.tanggal}
+                  style={{
+                    borderBottom: i < dummyRekap.length - 1
+                      ? "1px solid rgba(228,189,106,0.06)"
+                      : "none",
+                  }}
+                >
+                  <td
+                    className="px-6 py-4 text-sm"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
+                  >
+                    {row.tanggal}
+                  </td>
+                  <td
+                    className="px-6 py-4 text-sm font-mono"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
+                  >
+                    {row.masuk}
+                  </td>
+                  <td
+                    className="px-6 py-4 text-sm font-mono"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
+                  >
+                    {row.keluar}
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${statusStyle[row.status]}`}>
-                      {row.status}
+                    {row.lokasi !== "-" ? (
+                      <span
+                        className="flex items-center gap-1 text-xs"
+                        style={{ color: "rgba(255,255,255,0.45)" }}
+                      >
+                        <MapPin className="w-3 h-3" />
+                        {row.lokasi}
+                      </span>
+                    ) : (
+                      <span style={{ color: "rgba(255,255,255,0.2)" }}>-</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                      style={{
+                        backgroundColor: statusConfig[row.status].bg,
+                        color:           statusConfig[row.status].color,
+                      }}
+                    >
+                      {statusConfig[row.status].label}
                     </span>
                   </td>
                 </tr>

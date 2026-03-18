@@ -1,48 +1,63 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/products/ProductCard";
 import { Product } from "@/types";
 
-export default function FeaturedProducts({
-  products,
-}: {
-  products: Product[];
-}) {
+export default function FeaturedProducts({ products }: { products: Product[] }) {
   return (
-    <section className="py-20 bg-background">
-      <div className="container mx-auto px-4">
+    <section
+      className="py-24 relative overflow-hidden"
+      style={{ backgroundColor: "#fdf6f0" }}
+    >
+      {/* Background decoration */}
+      <div
+        className="absolute top-0 right-0 w-96 h-96 rounded-full blur-[120px] opacity-30 pointer-events-none"
+        style={{ backgroundColor: "#e4bd6a" }}
+      />
+
+      <div className="container mx-auto px-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
           <div>
-            <p className="text-red-500 font-semibold tracking-widest uppercase text-sm mb-2">
-              🔥 Menu Andalan
-            </p>
-            <h2 className="font-display font-black text-4xl md:text-5xl leading-tight">
-              Produk{" "}
+            <div
+              className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider mb-4"
+              style={{ backgroundColor: "rgba(156,50,50,0.1)", color: "#9c3232" }}
+            >
               <span
-            className="text-transparent bg-clip-text"
-            style={{
-              backgroundImage: "linear-gradient(135deg, #F97316, #EAB308)",
-            }}
-          >
-            Favorit
-          </span>
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: "#9c3232" }}
+              />
+              Menu Andalan
+            </div>
+            <h2
+              className="font-display font-bold text-4xl md:text-5xl lg:text-6xl leading-tight"
+              style={{ color: "#1a0808" }}
+            >
+              Produk{" "}
+              <span style={{ color: "#9c3232" }}>Terlaris</span>
+              <br />
+              <span className="text-3xl md:text-4xl" style={{ color: "#7a5252" }}>
+                yang Selalu Habis
+              </span>
             </h2>
-            <p className="text-muted-foreground mt-3 max-w-md">
-              Pilihan terbaik dari pelanggan setia kami. Coba satu, pasti
-              ketagihan!
-            </p>
           </div>
+
           <Link href="/menu">
-            <Button variant="outline" className="gap-2 shrink-0">
+            <button
+              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl text-sm font-semibold border-2 transition-all hover:shadow-lg hover:scale-[1.02]"
+              style={{
+                borderColor: "#9c3232",
+                color: "#9c3232",
+                backgroundColor: "transparent",
+              }}
+            >
               Lihat Semua Menu
-              <ArrowRight className="w-4 h-4" />
-            </Button>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
           </Link>
         </div>
 
-        {/* Grid */}
+        {/* Products */}
         {products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {products.map((product) => (
@@ -50,11 +65,9 @@ export default function FeaturedProducts({
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
+          <div className="text-center py-20">
             <p className="text-6xl mb-4">🍢</p>
-            <p className="text-muted-foreground">
-              Menu sedang dalam persiapan...
-            </p>
+            <p style={{ color: "#7a5252" }}>Menu sedang dalam persiapan...</p>
           </div>
         )}
       </div>

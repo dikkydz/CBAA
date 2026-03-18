@@ -6,7 +6,7 @@ import { z } from "zod";
 const schema = z.object({
   customerName:    z.string().min(2),
   customerPhone:   z.string().min(10),
-  customerAddress: z.string().min(10).optional(),
+  customerAddress: z.string().min(10),
   notes:           z.string().optional(),
   items: z.array(z.object({
     productId: z.string(),

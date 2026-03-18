@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart, Flame, Package } from "lucide-react";
+import { ShoppingCart, Flame, Package, Star } from "lucide-react";
 import { Product } from "@/types";
-import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -18,16 +17,18 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="product-card group bg-card border border-border rounded-3xl overflow-hidden">
+    <div className="card-hover group bg-white rounded-3xl overflow-hidden border"
+      style={{ borderColor: "#edd5c8" }}
+    >
       {/* Image */}
       <Link href={`/menu/${product.slug}`}>
-        <div className="relative h-48 overflow-hidden bg-muted">
+        <div className="relative h-52 overflow-hidden" style={{ backgroundColor: "#f5ece6" }}>
           {product.image ? (
             <Image
               src={product.image}
               alt={product.name}
               fill
-              className="object-cover group-hover:scale-110 transition-transform duration-500"
+              className="object-cover group-hover:scale-110 transition-transform duration-700"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-6xl">
@@ -35,77 +36,117 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
           )}
 
-          {/* Badges */}
+          {/* Overlay gradient */}
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{
+              background: "linear-gradient(to top, rgba(156,50,50,0.3), transparent)",
+            }}
+          />
+
+          {/* Featured badge */}
           {product.isFeatured && (
             <div className="absolute top-3 left-3">
-              <span className="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                ⭐ Favorit
-              </span>
+              <div
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold shadow-lg"
+                style={{ backgroundColor: "#e4bd6a", color: "#9c3232" }}
+              >
+                <Star className="w-3 h-3 fill-current" />
+                Favorit
+              </div>
             </div>
           )}
+
+          {/* Unavailable overlay */}
           {!product.isAvailable && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <span className="bg-black/70 text-white text-sm font-bold px-4 py-2 rounded-full">
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+            >
+              <span className="text-white text-sm font-bold px-4 py-2 rounded-full"
+                style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
+              >
                 Stok Habis
               </span>
             </div>
           )}
 
-          {/* Category */}
+          {/* Category pill */}
           <div className="absolute top-3 right-3">
-            <div className="bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-1 text-xs font-semibold flex items-center gap-1">
-              <span>{product.category?.icon}</span>
-              <span>{product.category?.name}</span>
+            <div
+              className="px-2.5 py-1 rounded-full text-xs font-semibold backdrop-blur-sm"
+              style={{ backgroundColor: "rgba(255,255,255,0.85)", color: "#9c3232" }}
+            >
+              {product.category?.icon} {product.category?.name}
             </div>
           </div>
         </div>
       </Link>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-5">
         <Link href={`/menu/${product.slug}`}>
-          <h3 className="font-display font-bold text-lg leading-tight hover:text-primary transition-colors line-clamp-1">
+          <h3
+            className="font-display font-bold text-xl leading-tight mb-1.5 hover:opacity-80 transition-opacity line-clamp-1"
+            style={{ color: "#1a0808" }}
+          >
             {product.name}
           </h3>
         </Link>
 
         {product.description && (
-          <p className="text-sm text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
+          <p
+            className="text-sm leading-relaxed line-clamp-2 mb-3"
+            style={{ color: "#7a5252" }}
+          >
             {product.description}
           </p>
         )}
 
         {/* Meta */}
-        <div className="flex items-center gap-3 mt-2">
+        <div className="flex items-center gap-3 mb-4">
           {product.spicyLevel > 0 && (
             <div className="flex items-center gap-0.5">
               {Array.from({ length: product.spicyLevel }).map((_, i) => (
-                <Flame key={i} className="w-3.5 h-3.5 text-red-500 fill-red-500" />
+                <Flame
+                  key={i}
+                  className="w-3.5 h-3.5"
+                  style={{ color: "#9c3232", fill: "#9c3232" }}
+                />
               ))}
             </div>
           )}
           {product.weight && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <div
+              className="flex items-center gap-1 text-xs"
+              style={{ color: "#7a5252" }}
+            >
               <Package className="w-3 h-3" />
-              <span>{product.weight}</span>
+              {product.weight}
             </div>
           )}
         </div>
 
-        {/* Price + Add */}
-        <div className="flex items-center justify-between mt-4">
-          <p className="font-bold text-xl text-primary">
-            {formatPrice(product.price)}
-          </p>
-          <Button
-            size="sm"
+        {/* Price + CTA */}
+        <div className="flex items-center justify-between">
+          <div>
+            <p
+              className="font-display font-bold text-2xl"
+              style={{ color: "#9c3232" }}
+            >
+              {formatPrice(product.price)}
+            </p>
+          </div>
+
+          <button
             onClick={handleAdd}
             disabled={!product.isAvailable}
-            className="flame-gradient border-0 text-white gap-1.5 hover:opacity-90"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 hover:scale-[1.03] active:scale-95 shadow-md disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{ backgroundColor: "#9c3232", color: "#e4bd6a" }}
           >
             <ShoppingCart className="w-4 h-4" />
             Tambah
-          </Button>
+          </button>
         </div>
       </div>
     </div>
