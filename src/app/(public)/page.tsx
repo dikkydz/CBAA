@@ -6,16 +6,24 @@ import FeaturedProducts from "@/components/home/FeaturedProducts";
 import WhyUsSection from "@/components/home/WhyUsSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import CTASection from "@/components/home/CTASection";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import { CartProvider } from "@/context/CartContext";
+
 
 async function getFeaturedProducts() {
   try {
-    return await prisma.product.findMany({
-      where: { isFeatured: true, isAvailable: true },
+    const products = await prisma.product.findMany({
+      where: { isFeatured: true },
       include: { category: true },
       orderBy: { createdAt: "desc" },
-      take: 4,
+      take: 6,
     });
-  } catch {
+    console.log("Featured products:", products.length);
+    return products;
+  } catch (error) {
+    console.error("Error fetching products:", error);
     return [];
   }
 }
@@ -39,14 +47,19 @@ export default async function HomePage() {
   ]);
 
   return (
-    <>
-      <HeroSection />
-      <MarqueeSection />
-      <StatsSection />
-      <FeaturedProducts products={products as any} />
-      <WhyUsSection />
-      <TestimonialsSection testimonials={testimonials as any} />
-      <CTASection />
-    </>
+    <CartProvider>
+      <Navbar />
+      <main>
+        <HeroSection />
+        <MarqueeSection />
+        <StatsSection />
+        <FeaturedProducts products={products as any} />
+        <WhyUsSection />
+        <TestimonialsSection testimonials={testimonials as any} />
+        <CTASection />
+      </main>
+      <Footer />
+      <WhatsAppButton />
+    </CartProvider>
   );
 }
