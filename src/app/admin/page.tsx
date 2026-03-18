@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Clock, Users, ClipboardCheck,
   UserCheck, TrendingUp, ArrowUpRight,
